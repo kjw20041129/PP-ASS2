@@ -1,6 +1,6 @@
 /**
  * @file maze.c
- * @author (YOUR NAME)
+ * @author Jiawen Kang
  * @brief Code for the maze game for COMP1921 Assignment 2
  * NOTE - You can remove or edit this file however you like - this is just a provided skeleton code
  * which may be useful to anyone who did not complete assignment 1.
