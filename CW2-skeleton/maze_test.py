@@ -1,12 +1,27 @@
-import subprocess
 import os
-def test_maze_load():
-    #测试能否正常读取格式正确的迷宫
-    test_file_path = os.path.join(os.path.dirname(__file__), "test_data", "mazes", "valid", "reg_5x5.txt")
-    #生成绝对路径
+import subprocess
 
-    process = subprocess.Popen(["./maze", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+def test_maze_load():
+    # 测试能否正常读取格式正确的迷宫
+    test_file_path = os.path.join(os.path.dirname(__file__), "test_data", "mazes", "valid", "reg_5x5.txt")
+    print("测试文件路径:", test_file_path)  # 调试信息
+
+    # 获取当前脚本所在的目录
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # 构造可执行文件的路径
+    maze_executable_path = os.path.join(current_dir, "src", "maze")
+    print("可执行文件路径:", maze_executable_path)  # 调试信息
+
+    # 确保路径中没有空格问题
+    maze_executable_path = maze_executable_path.replace(" ", "\\ ")
+    test_file_path = test_file_path.replace(" ", "\\ ")
+
+    process = subprocess.Popen([maze_executable_path, test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     stdout, stderr = process.communicate()
+
+    print("Return code:", process.returncode)  # 调试信息
+    print("Standard Output:", stdout)  # 调试信息
+    print("Standard Error:", stderr)  # 调试信息
 
     if process.returncode == 0:
         print("程序运行成功")
@@ -22,9 +37,9 @@ def test_maze_load():
             "#####"
         ]
         
-         # 将程序的输出按行分割，并去除空白行
+        # 将程序的输出按行分割，并去除空白行
         output_lines = [line.strip() for line in stdout.strip().split('\n') if line.strip()]
-            
+        
         # 检查输出的行数是否与预期一致
         if len(output_lines) != len(expected_output):
             print("测试失败：输出的行数与预期不符")
@@ -41,6 +56,32 @@ def test_maze_load():
         print("程序运行失败")
         print("错误：")
         print(stderr)
+
+
+def run_maze_game_with_input(maze_file, input_file):
+    # 运行迷宫游戏并提供输入文件，返回标准流输出和标准错误
+    maze_path = os.path.join(os.path.dirname(__file__), maze_file)
+    input_path = os.path.join(os.path.dirname(__file__), input_file)
+    
+    try:
+        with open(input_path, 'r') as infile:
+            process = subprocess.Popen([maze_executable_path, maze_path], stdin=infile, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            stdout, stderr = process.communicate()
+    except Exception as e:
+        print(f"运行程序时发生异常：{e}")
+        return None, None
+    
+    return stdout, stderr
+
+def main():
+    test_maze_load()
+    # 其他测试函数...
+
+if __name__ == "__main__":
+    main()
+
+
+
 
 
 
