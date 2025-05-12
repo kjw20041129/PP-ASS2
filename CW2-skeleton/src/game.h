@@ -3,7 +3,6 @@
 
 #include "maze.h"
 
-// 定义游戏结构体
 typedef struct {
     Maze maze;          // 迷宫数据
     int player_x;       // 玩家的水平位置
@@ -16,7 +15,7 @@ typedef struct {
 void load_maze(MazeGame *game, const char *filename);
 // 加载迷宫文件并初始化游戏状态
 
-void print_maze(const MazeGame *game);
+void print_game_maze(const MazeGame *game);
 // 打印迷宫，显示玩家当前位置
 
 int player_move(MazeGame *game, char direction);

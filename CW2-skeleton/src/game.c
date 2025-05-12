@@ -1,6 +1,7 @@
 #include "game.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 void load_maze(MazeGame *game, const char *filename) {
@@ -33,7 +34,7 @@ void load_maze(MazeGame *game, const char *filename) {
     fclose(file);
 }
 
-void print_maze(const MazeGame *game) {
+void print_game_maze(const MazeGame *game) {
     print_maze(&game->maze, game->player_x, game->player_y);
 }
 

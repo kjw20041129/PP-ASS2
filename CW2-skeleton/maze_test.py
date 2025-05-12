@@ -1,12 +1,11 @@
 import subprocess
 import os
-
 def test_maze_load():
     #测试能否正常读取格式正确的迷宫
     test_file_path = os.path.join(os.path.dirname(__file__), "test_data", "mazes", "valid", "reg_5x5.txt")
     #生成绝对路径
 
-    process = subprocess.Popen(["./maze_game", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    process = subprocess.Popen(["./maze", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     stdout, stderr = process.communicate()
 
     if process.returncode == 0:
@@ -52,7 +51,7 @@ def test_invalid_width_maze():
     
     try:
         #运行程序，传递迷宫路径
-        process = subprocess.Popen(["./maze_game", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(["./maze", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         
         #检查返回码
@@ -75,7 +74,7 @@ def test_invalid_height_maze():
     
     try:
         #运行程序，传递迷宫路径
-        process = subprocess.Popen(["./maze_game", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(["./maze", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         
         #检查返回码
@@ -94,7 +93,7 @@ def test_maze_too_small():
     #测试迷宫尺寸小于最小值（5x5）
     test_file_path = os.path.join(os.path.dirname(__file__), "test_data", "mazes", "invalid", "too_small_4x4.txt")
     
-    process = subprocess.Popen(["./maze_game", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    process = subprocess.Popen(["./maze", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     stdout, stderr = process.communicate()
     
     if process.returncode != 0 and "Maze size is too small. Minimum size is 5x5." in stderr:
@@ -111,7 +110,7 @@ def test_maze_too_large():
     #测试迷宫尺寸大于最大值（100x100）
     test_file_path = os.path.join(os.path.dirname(__file__), "test_data", "mazes", "invalid", "too_large_101x101.txt")
     
-    process = subprocess.Popen(["./maze_game", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    process = subprocess.Popen(["./maze", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     stdout, stderr = process.communicate()
     
     if process.returncode != 0 and "Maze size is too large. Maximum size is 100x100." in stderr:
@@ -131,7 +130,7 @@ def test_invalid_S_maze():
     
     try:
         # 运行程序，传递迷宫路径
-        process = subprocess.Popen(["./maze_game", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(["./maze", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         
         # 检查返回码
@@ -157,7 +156,7 @@ def test_invalid_E_maze():
     test_file_path = os.path.join(os.path.dirname(__file__),"test_data", "mazes", "invalid", "ireg_no_E.txt")
     
     try:
-        process = subprocess.Popen(["./maze_game", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(["./maze", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
 
         #检查返回码
@@ -183,7 +182,7 @@ def test_invalid_file():
     #测试无效文件
     test_file_path = os.path.join(os.path.dirname(__file__), "test_data", "invalid", "invalid_file_maze.jpg")
     try:
-        process = subprocess.Popen(["./maze_game", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(["./maze", test_file_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         
         # 检查返回码
@@ -213,7 +212,7 @@ def run_maze_game_with_input(maze_file, input_file):
     
     try:
         with open(input_path, 'r') as infile:
-            process = subprocess.Popen(["./maze_game", maze_path], stdin=infile, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            process = subprocess.Popen(["./maze", maze_path], stdin=infile, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             stdout, stderr = process.communicate()
     except Exception as e:
         print(f"运行程序时发生异常：{e}")
@@ -235,8 +234,8 @@ def run_maze_game_with_input(maze_file, input_file):
 """
 def test_invalid_input():
     # 测试玩家输入非法字符（如非WASDQM的字符）
-    maze_file = "test_data/mazes/valid/reg_5x5.txt"
-    input_file = "test_data/inputs/invalid_input.txt"  # 输入文件包含非法字符 "X"
+    maze_file = r"test_data/mazes/valid/reg_5x5.txt"
+    input_file = r"test_data/inputs/invalid_input.txt"  # 输入文件包含非法字符 "X"
     
     stdout, stderr = run_maze_game_with_input(maze_file, input_file)
     
@@ -267,7 +266,7 @@ def test_invalid_input():
 
 def test_player_move_up_uppercase():
     #测试玩家向上移动（大写W）
-    stdout, stderr = run_maze_game_with_input("test_data/mazes/valid/reg_movement.txt", "test_data/inputs/move_up_uppercase.txt")
+    stdout, stderr = run_maze_game_with_input(r"test_data/mazes/valid/reg_movement.txt", r"test_data/inputs/move_up_uppercase.txt")
     
     if "Player position: (4, 3)" in stdout:
         print("测试成功：玩家向上移动正确（大写W）")
@@ -278,7 +277,7 @@ def test_player_move_up_uppercase():
 
 def test_player_move_up_lowercase():
     #测试玩家向上移动（小写w）
-    stdout, stderr = run_maze_game_with_input("test_data/mazes/valid/reg_movement.txt", "test_data/inputs/move_up_lowercase.txt")
+    stdout, stderr = run_maze_game_with_input(r"test_data/mazes/valid/reg_movement.txt", r"test_data/inputs/move_up_lowercase.txt")
     
     if "Player position: (4, 3)" in stdout:
         print("测试成功：玩家向上移动正确（小写w）")
@@ -289,7 +288,7 @@ def test_player_move_up_lowercase():
 
 def test_player_move_down_uppercase():
     #测试玩家向下移动（大写S）
-    stdout, stderr = run_maze_game_with_input("test_data/mazes/valid/reg_movement.txt", "test_data/inputs/move_down_uppercase.txt")
+    stdout, stderr = run_maze_game_with_input(r"test_data/mazes/valid/reg_movement.txt", r"test_data/inputs/move_down_uppercase.txt")
     
     if "Player position: (4, 5)" in stdout:
         print("测试成功：玩家向下移动正确（大写S）")
@@ -300,7 +299,7 @@ def test_player_move_down_uppercase():
 
 def test_player_move_down_lowercase():
     #测试玩家向下移动（小写s
-    stdout, stderr = run_maze_game_with_input("test_data/mazes/valid/reg_movement.txt", "test_data/inputs/move_down_lowercase.txt")
+    stdout, stderr = run_maze_game_with_input(r"test_data/mazes/valid/reg_movement.txt", r"test_data/inputs/move_down_lowercase.txt")
     
     if "Player position: (4, 5)" in stdout:
         print("测试成功：玩家向下移动正确（小写s）")
@@ -311,7 +310,7 @@ def test_player_move_down_lowercase():
 
 def test_player_move_left_uppercase():
     #测试玩家向左移动（大写A）
-    stdout, stderr = run_maze_game_with_input("test_data/mazes/valid/reg_movement.txt", "test_data/inputs/move_left_uppercase.txt")
+    stdout, stderr = run_maze_game_with_input(r"test_data/mazes/valid/reg_movement.txt", r"test_data/inputs/move_left_uppercase.txt")
     
     if "Player position: (3, 4)" in stdout:
         print("测试成功：玩家向左移动正确（大写A）")
@@ -322,7 +321,7 @@ def test_player_move_left_uppercase():
 
 def test_player_move_left_lowercase():
     #测试玩家向左移动（小写a）
-    stdout, stderr = run_maze_game_with_input("test_data/mazes/valid/reg_movement.txt", "test_data/inputs/move_left_lowercase.txt")
+    stdout, stderr = run_maze_game_with_input(r"test_data/mazes/valid/reg_movement.txt", r"test_data/inputs/move_left_lowercase.txt")
     
     if "Player position: (3, 4)" in stdout:
         print("测试成功：玩家向左移动正确（小写a）")
@@ -333,7 +332,7 @@ def test_player_move_left_lowercase():
 
 def test_player_move_right_uppercase():
     #测试玩家向右移动（大写D）
-    stdout, stderr = run_maze_game_with_input("test_data/mazes/valid/reg_movement.txt", "test_data/inputs/move_right_uppercase.txt")
+    stdout, stderr = run_maze_game_with_input(r"test_data/mazes/valid/reg_movement.txt", r"test_data/inputs/move_right_uppercase.txt")
     
     if "Player position: (5, 4)" in stdout:
         print("测试成功：玩家向右移动正确（大写D）")
@@ -344,7 +343,7 @@ def test_player_move_right_uppercase():
 
 def test_player_move_right_lowercase():
     #测试玩家向右移动（小写d）
-    stdout, stderr = run_maze_game_with_input("test_data/mazes/valid/reg_movement.txt", "test_data/inputs/move_right_lowercase.txt")
+    stdout, stderr = run_maze_game_with_input(r"test_data/mazes/valid/reg_movement.txt", r"test_data/inputs/move_right_lowercase.txt")
     
     if "Player position: (5, 4)" in stdout:
         print("测试成功：玩家向右移动正确（小写d）")
@@ -355,8 +354,8 @@ def test_player_move_right_lowercase():
 
 def test_player_position_with_X():
     #测试玩家位置是否用 X 表示
-    maze_file = "test_data/mazes/valid/reg_5x5.txt"
-    input_file = "test_data/inputs/move_right_lowercase.txt"
+    maze_file = r"test_data/mazes/valid/reg_5x5.txt"
+    input_file = r"test_data/inputs/move_right_lowercase.txt"
     
     stdout, stderr = run_maze_game_with_input(maze_file, input_file)
     
@@ -394,7 +393,7 @@ def test_player_position_with_X():
 
 def test_wall_boundary():
     #测试玩家被墙包围时的移动
-    stdout, stderr = run_maze_game_with_input("test_data/mazes/valid/surrounded_by_walls.txt", "test_data/inputs/move_all_directions.txt")
+    stdout, stderr = run_maze_game_with_input(r"test_data/mazes/valid/surrounded_by_walls.txt", r"test_data/inputs/move_all_directions.txt")
     
     expected_output = [
         "Cannot move through walls.",
@@ -423,7 +422,7 @@ def test_wall_boundary():
 
 def test_maze_boundary():
     # 测试地图边界
-    stdout, stderr = run_maze_game_with_input("test_data\mazes\valid\boundary_test.txt", "test_data/inputs/move_to_boundaries.txt")
+    stdout, stderr = run_maze_game_with_input(r"test_data\mazes\valid\boundary_test.txt", r"test_data/inputs/move_to_boundaries.txt")
     
     expected_output = "Cannot move outside the maze boundary."
     
@@ -448,8 +447,8 @@ def test_maze_boundary():
 
 def test_print_maze_with_M_uppercase():
     # 测试玩家输入大写 M 时打印当前迷宫
-    maze_file = "test_data/mazes/valid/reg_5x5.txt"
-    input_file = "test_data/inputs/print_maze_with_M_uppercase.txt"  # 输入文件包含 "M"
+    maze_file = r"test_data/mazes/valid/reg_5x5.txt"
+    input_file = r"test_data/inputs/print_maze_with_M_uppercase.txt"  # 输入文件包含 "M"
 
     stdout, stderr = run_maze_game_with_input(maze_file, input_file)
 
@@ -488,8 +487,8 @@ def test_print_maze_with_M_uppercase():
 
 def test_print_maze_with_M_lowercase():
     # 测试玩家输入小写 m 时打印当前迷宫
-    maze_file = "test_data/mazes/valid/reg_5x5.txt"
-    input_file = "test_data/inputs/print_maze_with_M_lowercase.txt"  # 输入文件包含 "m"
+    maze_file = r"test_data/mazes/valid/reg_5x5.txt"
+    input_file = r"test_data/inputs/print_maze_with_M_lowercase.txt"  # 输入文件包含 "m"
 
     stdout, stderr = run_maze_game_with_input(maze_file, input_file)
 
@@ -527,8 +526,8 @@ def test_print_maze_with_M_lowercase():
 
 def test_win():
     #测试玩家到达终点后游戏获胜
-    maze_file = "test_data/mazes/valid/test_win.txt"
-    input_file = "test_data/inputs/move_right_twice.txt"
+    maze_file = r"test_data/mazes/valid/test_win.txt"
+    input_file = r"test_data/inputs/move_right_twice.txt"
     
     stdout, stderr = run_maze_game_with_input(maze_file, input_file)
     
@@ -560,8 +559,8 @@ def test_win():
 
 def test_quit_uppercase():
     print("测试玩家中途退出游戏（大写Q）...")
-    maze_file = "test_data/mazes/valid/reg_5x5.txt"
-    input_file = "test_data/inputs/quit_game_uppercase.txt"
+    maze_file = r"test_data/mazes/valid/reg_5x5.txt"
+    input_file = r"test_data/inputs/quit_game_uppercase.txt"
     
     stdout, stderr = run_maze_game_with_input(maze_file, input_file)
     
@@ -593,8 +592,8 @@ def test_quit_uppercase():
 
 def test_quit_lowercase():
     print("测试玩家中途退出游戏（小写q）...")
-    maze_file = "test_data/mazes/valid/reg_5x5.txt"
-    input_file = "test_data/inputs/quit_game_lowercase.txt"
+    maze_file = r"test_data/mazes/valid/reg_5x5.txt"
+    input_file = r"test_data/inputs/quit_game_lowercase.txt"
     
     stdout, stderr = run_maze_game_with_input(maze_file, input_file)
     
@@ -622,4 +621,35 @@ def test_quit_lowercase():
         if stderr:
             print("错误输出：")
             print(stderr)
+
+
+def main():
+    test_maze_load()
+    test_invalid_width_maze()
+    test_invalid_height_maze()
+    test_maze_too_small()
+    test_maze_too_large()
+    test_invalid_S_maze()
+    test_invalid_E_maze()
+    test_invalid_file()
+    test_invalid_input()
+    test_player_move_up_uppercase()
+    test_player_move_up_lowercase()
+    test_player_move_down_uppercase()
+    test_player_move_down_lowercase()
+    test_player_move_left_uppercase()
+    test_player_move_left_lowercase()
+    test_player_move_right_uppercase()
+    test_player_move_right_lowercase()
+    test_player_position_with_X()
+    test_wall_boundary()
+    test_maze_boundary()
+    test_print_maze_with_M_uppercase()
+    test_print_maze_with_M_lowercase()
+    test_win()
+    test_quit_uppercase()
+    test_quit_lowercase()
+
+if __name__ == "__main__":
+    main()
 

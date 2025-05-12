@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     load_maze(&game, argv[1]);
 
     printf("Welcome to the Maze Game!\n");
-    print_maze(&game);
+    print_game_maze(&game);
 
     while (!game.game_over) {
         char input;
@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
         scanf(" %c", &input);
 
         if (input == 'M' || input == 'm') {
-            print_maze(&game);
+            print_game_maze(&game);
         } else if (input == 'Q' || input == 'q') {
             game_quit(&game);
         } else {
