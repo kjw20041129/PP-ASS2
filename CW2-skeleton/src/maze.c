@@ -54,11 +54,17 @@ int read_maze(Maze *maze, FILE *file) {
             return 1; // File read error
         }
         for (int j = 0; j < width; j++) {
-            maze->maze[i][j] = buffer[j];
+            char c = buffer[j];
+            if (c != '#' && c != ' ' && c != 'S' && c != 'E') {
+                free_maze(maze);
+                return 1; // Invalid character found
+            }
+            maze->maze[i][j] = c;
         }
     }
     return 0;
 }
+
 
 void print_maze(const Maze *maze, int player_x, int player_y) {
     printf("\n");

@@ -22,8 +22,7 @@ void load_maze(MazeGame *game, const char *filename) {
         for (int j = 0; j < game->maze.width; j++) {
             if (game->maze.maze[i][j] == 'S') {
                 game->player_x = j;
-                game->player_y = i;
-                game->maze.maze[i][j] = ' '; // Clear start marker
+                game->player_y = i;                
                 break;
             }
         }
@@ -35,8 +34,24 @@ void load_maze(MazeGame *game, const char *filename) {
 }
 
 void print_game_maze(const MazeGame *game) {
-    print_maze(&game->maze, game->player_x, game->player_y);
+    printf("\n");
+    for (int i = 0; i < game->maze.height; i++) {
+        for (int j = 0; j < game->maze.width; j++) {
+            // 检查当前位置是否是起点或终点
+            if (game->maze.maze[i][j] == 'S' || game->maze.maze[i][j] == 'E') {
+                printf("%c", game->maze.maze[i][j]);
+            } else if (game->player_x == j && game->player_y == i) {
+                // 如果不是起点或终点，再检查是否是玩家位置
+                printf("X");
+            } else {
+                // 其他位置正常打印迷宫内容
+                printf("%c", game->maze.maze[i][j]);
+            }
+        }
+        printf("\n");
+    }
 }
+
 
 int player_move(MazeGame *game, char direction) {
     int new_x = game->player_x;
