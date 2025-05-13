@@ -9,7 +9,6 @@
 
 // 函数声明
 void generate_maze(int width, int height, char *filename);
-void print_maze(char maze[MAX_SIZE][MAX_SIZE], int width, int height);
-void find_and_mark_path(char maze[MAX_SIZE][MAX_SIZE], int width, int height);
+int find_and_mark_path(char maze[MAX_SIZE][MAX_SIZE], int width, int height); // 修改为返回 int 类型
 
 #endif

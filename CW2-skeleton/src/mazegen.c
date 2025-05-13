@@ -30,7 +30,7 @@ void dfs(char maze[MAX_SIZE][MAX_SIZE], int x, int y, int width, int height) {
 }
 
 // 使用BFS找到路径并标记
-void find_and_mark_path(char maze[MAX_SIZE][MAX_SIZE], int width, int height) {
+int find_and_mark_path(char maze[MAX_SIZE][MAX_SIZE], int width, int height) {
     Point start = {-1, -1};
     Point end = {-1, -1};
 
@@ -49,7 +49,7 @@ void find_and_mark_path(char maze[MAX_SIZE][MAX_SIZE], int width, int height) {
 
     if (start.x == -1 || end.x == -1) {
         printf("Start or end point not found\n");
-        return;
+        return 0;
     }
 
     // BFS
@@ -73,7 +73,7 @@ void find_and_mark_path(char maze[MAX_SIZE][MAX_SIZE], int width, int height) {
             }
             maze[start.x][start.y] = 'S'; // 保留起点
             maze[end.x][end.y] = 'E';     // 保留终点
-            return;
+            return 1;
         }
 
         for (int i = 0; i < 4; i++) {
@@ -88,6 +88,7 @@ void find_and_mark_path(char maze[MAX_SIZE][MAX_SIZE], int width, int height) {
     }
 
     printf("No path found\n");
+    return 0;
 }
 
 // 生成迷宫并保存到文件
@@ -118,22 +119,23 @@ void generate_maze(int width, int height, char *filename) {
     }
     maze[end_x][end_y] = 'E';
 
-    find_and_mark_path(maze, width, height);
-
-    FILE *file = fopen(filename, "w");
-    if (file == NULL) {
-        printf("Error opening file\n");
-        return;
-    }
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            fputc(maze[i][j], file);
+    if (find_and_mark_path(maze, width, height)) {
+        FILE *file = fopen(filename, "w");
+        if (file == NULL) {
+            printf("Error opening file\n");
+            return;
         }
-        fputc('\n', file);
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                fputc(maze[i][j], file);
+            }
+            fputc('\n', file);
+        }
+        fclose(file);
+        printf("Maze generated and saved to %s\n", filename);
+    } else {
+        printf("Generated maze is invalid. No path found. Discarding maze.\n");
     }
-    fclose(file);
-
-    printf("Maze generated and saved to %s\n", filename);
 }
 
 int main(int argc, char *argv[]) {
