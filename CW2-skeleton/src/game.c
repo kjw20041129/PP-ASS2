@@ -17,21 +17,38 @@ void load_maze(MazeGame *game, const char *filename) {
         exit(EXIT_MAZE_ERROR);
     }
 
-    // Find start position
+    int start_found = 0;
+    int end_found = 0;
+
+    // Find start and end positions
     for (int i = 0; i < game->maze.height; i++) {
         for (int j = 0; j < game->maze.width; j++) {
             if (game->maze.maze[i][j] == 'S') {
                 game->player_x = j;
-                game->player_y = i;                
-                break;
+                game->player_y = i;
+                start_found = 1;
+            } else if (game->maze.maze[i][j] == 'E') {
+                end_found = 1;
             }
         }
     }
 
+    fclose(file);
+
+    if (!start_found) {
+        fprintf(stderr, "Error: Maze lacks a starting point 'S'\n");
+        exit(EXIT_MAZE_ERROR);
+    }
+
+    if (!end_found) {
+        fprintf(stderr, "Error: Maze lacks an ending point 'E'\n");
+        exit(EXIT_MAZE_ERROR);
+    }
+
     game->game_over = 0;
     game->win = 0;
-    fclose(file);
 }
+
 
 void print_game_maze(const MazeGame *game) {
     printf("\n");
